@@ -1,0 +1,31 @@
+spring:
+  application:
+    name: trader-edge
+  cloud:
+    gateway:
+      routes:
+      - id: httpbin
+        uri: http://www.httpbin.org
+        predicates:
+        - Path=/test
+        filters:
+        - SetResponseHeader=X-TRADER-CLOUD-GATEWAY-ROUTE-ID, httpbin
+        - RewritePath=/test, /
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: https://login.microsoftonline.com/6a15254b-eb29-4152-ad3b-c755c8cff62f/v2.0
+      client:
+        registration: 
+          trader: 
+            client-id: CHANGE_ME
+            client-secret: CHANGE_ME
+            scope: openid
+        provider:
+          trader:
+            user-name-attribute: email
+            issuer-uri: https://login.microsoftonline.com/6a15254b-eb29-4152-ad3b-c755c8cff62f/v2.0
+logging:
+  level:
+    org.springframework.cloud.gateway: INFO
